@@ -11,4 +11,5 @@ install(TARGETS evdipp
 install(FILES buffer.hpp screen.hpp evdi.hpp
   DESTINATION include/libevdipp
 )
-target_link_libraries(evdipp PUBLIC evdi_lib)
+target_include_directories(evdipp PUBLIC ../evdi/library)
+target_link_libraries(evdipp PUBLIC -levdi)

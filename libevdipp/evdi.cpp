@@ -25,6 +25,7 @@ Evdi::Evdi()
 
 Evdi::Evdi(int devnum)
 {
+    std::cout << "Creating evdi: " << devnum << std::endl;
     evdi_set_logging({ .function = &Evdi::dispatch_log, .user_data = this });
     handle = evdi_open(devnum);
     std::cout << "Created EVDI Device 2" << std::endl;

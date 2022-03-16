@@ -90,7 +90,6 @@ void Screen::cursor_move_handler(evdi_cursor_move cursor_move, void *user_data)
 
 void Screen::on_mode_change(evdi_mode mode)
 {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
     logging << "Mode change: " << mode.width << "x" << mode.height << "@" << mode.refresh_rate << "Hz " << mode.bits_per_pixel << "bpp fmt:" << mode.pixel_format
             << std::endl;
 
@@ -112,7 +111,6 @@ void Screen::on_mode_change(evdi_mode mode)
 
 int Screen::on_update_ready(int buffer_to_be_updated)
 {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
     // logging << "Update ready for buffer " << buffer_to_be_updated << std::endl;
     int num_rects;
     evdi.grab_pixels(rects.data(), &num_rects);
@@ -132,31 +130,26 @@ int Screen::on_update_ready(int buffer_to_be_updated)
 
 void Screen::on_dpms_notification(int dpms_mode)
 {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
     logging << "DPMS event: " << dpms_mode << std::endl;
 }
 
 void Screen::on_crtc_state_change(int state)
 {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
     logging << "CRTC state change: " << state << std::endl;
 }
 
 void Screen::on_cursor_set(evdi_cursor_set cursor_set)
 {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
     logging << "Cursor " << (cursor_set.enabled ? "ON" : "OFF") << ": Hot[X,Y]=" << cursor_set.hot_x << "," << cursor_set.hot_y << std::endl;
 }
 
 void Screen::on_cursor_move(evdi_cursor_move cursor_move)
 {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
     logging << "Cursor moved to " << cursor_move.x << "," << cursor_move.y << std::endl;
 }
 
 void Screen::update()
 {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
     if (!buffersRegistered)
     {
         return;

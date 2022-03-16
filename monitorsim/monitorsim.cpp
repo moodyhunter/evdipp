@@ -38,6 +38,7 @@ namespace
 
 int main(int argc, char *argv[])
 {
+    qputenv("DISPLAY", ":0");
     std::vector<unsigned char> edid;
     if (argc > 1)
     {
@@ -62,7 +63,7 @@ int main(int argc, char *argv[])
     };
 
     qDebug() << "Before creating evdi";
-    Evdi evdi{ 3 };
+    Evdi evdi{ 1 };
     qDebug() << "After creating evdi";
     if (!evdi)
     {
