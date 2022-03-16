@@ -1,11 +1,11 @@
-#include <libevdipp/evdi.hpp>
-#include <libevdipp/buffer.hpp>
 #include "qevdiscreen.h"
 
-QEvdiScreen::QEvdiScreen(const Evdi& evdi, std::vector<unsigned char> edid, bool separateCursorEvents)
-    : Screen(evdi, edid)
-    , screenEventNotifier(event_source(), QSocketNotifier::Read)
-    , enabled(false)
+#include <iostream>
+#include <libevdipp/buffer.hpp>
+#include <libevdipp/evdi.hpp>
+
+QEvdiScreen::QEvdiScreen(const Evdi &evdi, std::vector<unsigned char> edid, bool separateCursorEvents)
+    : Screen(evdi, edid), screenEventNotifier(event_source(), QSocketNotifier::Read), enabled(false)
 {
     noContent = QImage(1, 1, QImage::Format_RGB32);
     noContent.fill(Qt::black);
@@ -17,11 +17,13 @@ QEvdiScreen::QEvdiScreen(const Evdi& evdi, std::vector<unsigned char> edid, bool
 
 void QEvdiScreen::dispatchScreenEvents()
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     handle_events();
 }
 
 void QEvdiScreen::on_dpms_notification(int dpms_mode)
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     switch (dpms_mode) {
     case 0:
         enabled = true;
@@ -36,6 +38,7 @@ void QEvdiScreen::on_dpms_notification(int dpms_mode)
 
 void QEvdiScreen::on_mode_change(evdi_mode mode)
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     enabled = false;
 
     // let the parent class re-allocate and re-register buffers
@@ -51,6 +54,7 @@ void QEvdiScreen::on_mode_change(evdi_mode mode)
 
 void QEvdiScreen::on_cursor_set(evdi_cursor_set cursor_set)
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     constexpr size_t ARGB32_FOURCC = 0x34325241;
     if (cursor_set.pixel_format == ARGB32_FOURCC) {
         auto cursor_image = QImage((const uchar*)cursor_set.buffer, cursor_set.width, cursor_set.height, QImage::Format_ARGB32);
@@ -60,11 +64,13 @@ void QEvdiScreen::on_cursor_set(evdi_cursor_set cursor_set)
 
 void QEvdiScreen::on_cursor_move(evdi_cursor_move cursor_move)
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     emit cursor_moved(cursor_move.x, cursor_move.y);
 }
 
 QImage QEvdiScreen::make_qimage_wrapper(const std::unique_ptr<Buffer>& buffer)
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     evdi_buffer buf = buffer->get();
     // Qt apps will use this for access to screen data - this makes no copies and takes no ownership
     return QImage((const uchar*)buf.buffer, buf.width, buf.height, buf.stride, QImage::Format_RGB32);
@@ -72,6 +78,7 @@ QImage QEvdiScreen::make_qimage_wrapper(const std::unique_ptr<Buffer>& buffer)
 
 int QEvdiScreen::on_update_ready(int buffer_to_be_updated)
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     int rectCount = Screen::on_update_ready(buffer_to_be_updated);
     if (rectCount) {
         // TODO: this should also inform about the actual areas that changed
@@ -82,5 +89,6 @@ int QEvdiScreen::on_update_ready(int buffer_to_be_updated)
 
 QImage& QEvdiScreen::image_for_buffer(int num)
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     return enabled ? images[num] : noContent;
 }

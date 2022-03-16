@@ -1,11 +1,12 @@
-#include <iostream>
 #include "buffer.hpp"
+
 #include "debug.hpp"
+
+#include <iostream>
 
 Buffer::Buffer(int id, int width, int height, int stride)
 {
-    logging << "Creating buffer id:" << id << " size " << width << "x" << height
-         << " stride " << stride << std::endl;
+    logging << "Creating buffer id:" << id << " size " << width << "x" << height << " stride " << stride << std::endl;
     buffer.id = id;
     buffer.width = width;
     buffer.height = height;

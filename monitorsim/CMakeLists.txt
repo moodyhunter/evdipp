@@ -16,6 +16,6 @@ add_executable(monitorsim ${monitorsim_SOURCES})
 target_include_directories(monitorsim PRIVATE
   ../
 )
-target_link_libraries(monitorsim Qt5::Widgets evdipp libevdi)
+target_link_libraries(monitorsim Qt5::Widgets evdipp)
 
 install(TARGETS monitorsim RUNTIME DESTINATION bin)

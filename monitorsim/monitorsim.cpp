@@ -1,59 +1,71 @@
-#include <QApplication>
-#include <QPushButton>
-#include <QListWidget>
-#include <QListWidgetItem>
-#include <QGridLayout>
-#include <fstream>
-#include <iostream>
-
-#include <libevdipp/evdi.hpp>
 #include "screenpreview.h"
 
-namespace {
+#include <QApplication>
+#include <QGridLayout>
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QPushButton>
+#include <QtDebug>
+#include <fstream>
+#include <iostream>
+#include <libevdipp/evdi.hpp>
 
-bool read_edid_from_file(const std::string& filename,
-    std::vector<unsigned char>& edid)
+namespace
 {
-    try {
-        std::ifstream input(filename.c_str(), std::ios::binary | std::ios::ate);
-        input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-        if (input) {
-            std::streamsize size = input.tellg();
-            input.seekg(0, std::ios::beg);
-            edid.resize(size);
-            input.read((char*)edid.data(), size);
-            return input.good();
+    bool read_edid_from_file(const std::string &filename, std::vector<unsigned char> &edid)
+    {
+        try
+        {
+            std::ifstream input(filename.c_str(), std::ios::binary | std::ios::ate);
+            input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+            if (input)
+            {
+                std::streamsize size = input.tellg();
+                input.seekg(0, std::ios::beg);
+                edid.resize(size);
+                input.read((char *) edid.data(), size);
+                return input.good();
+            }
         }
-    } catch (const std::ios::failure&) {
+        catch (const std::ios::failure &)
+        {
+            return false;
+        }
         return false;
     }
-    return false;
-}
 
 } // anonymous namespace
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     std::vector<unsigned char> edid;
-    if (argc > 1) {
-        if (!read_edid_from_file(argv[1], edid)) {
-            std::cerr << "Reading the EDID file " << argv[1] << " failed."
-                      << std::endl;
+    if (argc > 1)
+    {
+        if (!read_edid_from_file(argv[1], edid))
+        {
+            std::cerr << "Reading the EDID file " << argv[1] << " failed." << std::endl;
             return 1;
         }
-    } else {
+    }
+    else
+    {
         std::cerr << "Warning: no argument passed, using built-in sample EDID" << std::endl;
     }
 
     QApplication app(argc, argv);
 
     auto log = new QListWidget;
-    Evdi::log_handler = [&log](const std::string& message) {
+    Evdi::log_handler = [&log](const std::string &message)
+    {
+        std::cout << message << std::endl;
         new QListWidgetItem(QString::fromStdString(message), log);
     };
 
-    Evdi evdi;
-    if (!evdi) {
+    qDebug() << "Before creating evdi";
+    Evdi evdi{ 3 };
+    qDebug() << "After creating evdi";
+    if (!evdi)
+    {
         std::cerr << "No usable EVDI found" << std::endl;
         return 3;
     }

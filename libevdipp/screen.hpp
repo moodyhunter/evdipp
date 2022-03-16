@@ -1,14 +1,16 @@
 #ifndef SCREEN_HPP
 #define SCREEN_HPP
 
+#include "buffer.hpp"
+#include "evdi.hpp"
+
 #include <map>
 #include <memory>
-#include "evdi.hpp"
-#include "buffer.hpp"
 
-class Screen {
-public:
-    Screen(const Evdi& evdi, std::vector<unsigned char>& edid, bool separateCursorEvents = false);
+class Screen
+{
+  public:
+    Screen(const Evdi &evdi, std::vector<unsigned char> &edid, bool separateCursorEvents = false);
     ~Screen();
     void update();
 
@@ -16,7 +18,7 @@ public:
     void handle_events();
     void enable_cursor_events() const;
 
-protected:
+  protected:
     virtual void on_mode_change(evdi_mode mode);
     virtual int on_update_ready(int buffer_to_be_updated);
     virtual void on_dpms_notification(int dpms_mode);
@@ -28,18 +30,18 @@ protected:
     std::map<int, std::unique_ptr<Buffer>> buffers;
     std::vector<evdi_rect> rects;
 
-private:
-    static void mode_change_handler(evdi_mode mode, void* user_data);
-    static void dpms_handler(int dpms_mode, void* user_data);
-    static void update_ready_handler(int buffer_to_be_updated, void* user_data);
-    static void crtc_state_handler(int state, void* user_data);
-    static void cursor_set_handler(evdi_cursor_set cursor_set, void* user_data);
-    static void cursor_move_handler(evdi_cursor_move cursor_move, void* user_data);
+  private:
+    static void mode_change_handler(evdi_mode mode, void *user_data);
+    static void dpms_handler(int dpms_mode, void *user_data);
+    static void update_ready_handler(int buffer_to_be_updated, void *user_data);
+    static void crtc_state_handler(int state, void *user_data);
+    static void cursor_set_handler(evdi_cursor_set cursor_set, void *user_data);
+    static void cursor_move_handler(evdi_cursor_move cursor_move, void *user_data);
 
     bool buffersRegistered;
     size_t bufferToUpdate;
 
-    const Evdi& evdi;
+    const Evdi &evdi;
     evdi_event_context context;
 };
 
