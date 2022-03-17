@@ -11,9 +11,9 @@ ScreenPreview::ScreenPreview(QEvdiScreen& screen, QWidget* parent)
     , latestBufferId(-1)
     , screen(screen)
 {
-    connect(&screen, SIGNAL(screen_updated(int)), this, SLOT(latest_buffer(int)));
-    connect(&screen, SIGNAL(cursor_changed(QImage, bool, int, int)), this, SLOT(update_cursor(QImage, bool, int, int)));
-    connect(&screen, SIGNAL(cursor_moved(int, int)), this, SLOT(move_cursor(int, int)));
+    connect(&screen, &QEvdiScreen::screen_updated, this, &ScreenPreview::latest_buffer);
+    connect(&screen, &QEvdiScreen::cursor_changed, this, &ScreenPreview::update_cursor);
+    connect(&screen, &QEvdiScreen::cursor_moved, this, &ScreenPreview::move_cursor);
     createTimer(60);
 }
 
@@ -48,7 +48,7 @@ void ScreenPreview::update_screen()
     screen.update();
 }
 
-void ScreenPreview::paintEvent(QPaintEvent*)
+void ScreenPreview::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
     if (latestBufferId >= 0) {
@@ -57,6 +57,7 @@ void ScreenPreview::paintEvent(QPaintEvent*)
     if (cursorEnabled) {
         painter.drawImage(cursorPosition - cursorHotpoint, cursorImage);
     }
+    QWidget::paintEvent(e);
     update();
 }
 

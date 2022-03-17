@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     };
 
     qDebug() << "Before creating evdi";
-    Evdi evdi{ 1 };
+    Evdi evdi{ 3 };
     qDebug() << "After creating evdi";
     if (!evdi)
     {

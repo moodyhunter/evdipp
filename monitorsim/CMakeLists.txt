@@ -1,9 +1,7 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt5Widgets)
-include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
-add_definitions(${Qt5Widgets_DEFINITIONS})
+find_package(Qt6Widgets)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
 set(monitorsim_SOURCES
@@ -16,6 +14,6 @@ add_executable(monitorsim ${monitorsim_SOURCES})
 target_include_directories(monitorsim PRIVATE
   ../
 )
-target_link_libraries(monitorsim Qt5::Widgets evdipp)
+target_link_libraries(monitorsim Qt6::Widgets evdipp)
 
 install(TARGETS monitorsim RUNTIME DESTINATION bin)
